@@ -10,6 +10,7 @@ router.post("/", async (req, res) => {
   try {
     const report = await MedicalReport.create(req.body);
     res.status(201).json({ msg: "Medical report added successfully", report });
+    
   } catch (error) {
     console.error("Error adding medical report:", error);
     res.status(400).json({ msg: "Failed to add medical report" });
