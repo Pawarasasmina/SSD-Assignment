@@ -18,7 +18,7 @@ import Home from "./pages/home";
 import Login from "./pages/login"; // Importing the login page
 import Register from "./pages/register"; // Importing the register page
 import Profile from "./pages/Profile"; // Importing the profile page
-import DisplayAppointments from "./pages/displayAppointments";
+import DisplayAppointments from "./pages/displayAppointments"; // Importing the appointment page
 import PaymentProcess from "./pages/paymentProcess";
 import AddDoctor from "./pages/AddDoctor";
 import DoctorList from "./pages/DoctorList";
