@@ -230,7 +230,9 @@ export const LoginRegister = () => {
               />
             </div>
             <a href="#">Forget Your Password?</a>
-            <button type="submit">Sign In</button>
+            <button type="submit">
+              <FaEnvelope style={{ marginRight: '8px' }} /> Sign In
+            </button>
             {error && <div className={styles.error}>{error}</div>}
             {success && <div className={styles.success}>{success}</div>}
           </form>
@@ -325,7 +327,7 @@ export const LoginRegister = () => {
               />
             </div>
             <button type="submit" className={styles.submitButton}>
-              Finish
+              <FaUser style={{ marginRight: '8px' }} /> Create Account
             </button>
             {error && <div className={styles.error}>{error}</div>}
             {success && <div className={styles.success}>{success}</div>}
@@ -346,7 +348,9 @@ export const LoginRegister = () => {
               <p>
                 Enter your personal details to use all of the site's features
               </p>
-              <button onClick={handleToggle}>Sign In</button>
+              <button onClick={handleToggle}>
+                <FaEnvelope style={{ marginRight: '8px' }} /> Switch to Sign In
+              </button>
             </div>
             <div
               className={`${styles["toggle-panel"]} ${styles["toggle-right"]}`}
@@ -356,7 +360,9 @@ export const LoginRegister = () => {
                 Register with your personal details to use all of the site's
                 features
               </p>
-              <button onClick={handleToggle}>Sign Up</button>
+              <button onClick={handleToggle}>
+                <FaUser style={{ marginRight: '8px' }} /> Switch to Sign Up
+              </button>
             </div>
           </div>
         </div>
