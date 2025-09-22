@@ -1,121 +1,168 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import {
-  FiUserPlus,
-  FiList,
-  FiFilePlus,
-  FiFileText,
-  FiMenu,
-} from "react-icons/fi";
-import { AiOutlineClose } from "react-icons/ai";
+  HiOutlineHome,
+  HiOutlineTag,
+  HiOutlineCube,
+  HiOutlineUserCircle,
+  HiOutlineLogout,
+} from "react-icons/hi";
+import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import { useUserSession } from "./UserSession"; // Use the custom hook
+import Logo from "../assets/PixelPlaza.svg";
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+export const Sidebar = ({ setUser }) => {
+  const [selected, setSelected] = useState("Overview");
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const { clearUserSession } = useUserSession(); // Use the hook to access clear function
+  const location = useLocation(); // Get the current location
 
-  // Toggle sidebar visibility
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // Handle logout
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to log out?")) {
-      sessionStorage.clear(); // Clear session storage
-      console.log("User logged out");
-      window.location.href = "/"; // Redirect to home page
+  const handleItemClick = (label) => {
+    if (selected === label) {
+      setDropdownOpen(dropdownOpen === label ? null : label);
+    } else {
+      setSelected(label);
+      setDropdownOpen(label);
     }
   };
 
+  const handleLogout = () => {
+    clearUserSession(); // Clear user data from local storage
+    window.location.href = "/"; // Redirect to homepage or login page
+  };
+
   return (
-    <>
-      {/* Menu Icon (Visible on smaller screens) */}
-      <div className="sms:block md:hidden p-4 bg-blue-900 text-white fixed top-0 left-0 z-50">
-        <FiMenu size={30} onClick={toggleSidebar} className="cursor-pointer" />
+    <div className="fixed top-0 left-0 flex flex-col bg-dark text-light w-64 h-screen p-4 z-50">
+      <div className="flex justify-center mb-8">
+        <img src={Logo} alt="Logo" className="h-20" />
       </div>
-
-      {/* Sidebar */}
-      <div
-        className={`bg-gradient-to-b from-blue-900 to-blue-700 text-white w-64 h-screen fixed top-0 left-0 p-5 shadow-xl transform transition-transform duration-300 z-40 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`} // Slide sidebar in/out based on the isOpen state
+      <nav className="space-y-10">
+        <SidebarItem
+          Icon={HiOutlineHome}
+          label="Overview"
+          link="/overview"
+          isActive={location.pathname === "/overview"}
+          handleItemClick={handleItemClick}
+          selected={selected}
+        />
+        <SidebarItem
+          Icon={HiOutlineTag}
+          label="Products"
+          selected={selected}
+          dropdownOpen={dropdownOpen}
+          handleItemClick={handleItemClick}
+          dropdownItems={[
+            { label: "Add Product", link: "/addproduct" },
+            { label: "All Products", link: "/allProducts" },
+          ]}
+        />
+        <SidebarItem
+          Icon={HiOutlineCube}
+          label="Promotions"
+          selected={selected}
+          link="/promotions"
+          handleItemClick={handleItemClick}
+        />
+        <SidebarItem
+          Icon={HiOutlineUserCircle}
+          label="Inventory"
+          selected={selected}
+          link="/inventory"
+          handleItemClick={handleItemClick}
+        />
+        <SidebarItem
+          Icon={HiOutlineLogout}
+          label="Seller Profile"
+          selected={selected}
+          link="/sellerProfile"
+          handleItemClick={handleItemClick}
+        />
+      </nav>
+      <button
+        onClick={handleLogout}
+        className="mt-auto bg-primary text-light rounded-full py-2 px-4 hover:bg-opacity-80 font-russo"
       >
-        {/* Close Icon (Visible on mobile screens when sidebar is open) */}
-        <div className="sms:block md:hidden text-right">
-          <AiOutlineClose
-            size={30}
-            onClick={toggleSidebar}
-            className="cursor-pointer"
-          />
-        </div>
-
-        <div>
-          <h2 className="text-3xl font-bold mb-6 tracking-wider text-center">
-            Healthcare <br /> Management
-          </h2>
-          <ul className="space-y-4">
-            <li>
-              <Link
-                to="/addDoctor"
-                className="flex items-center space-x-3 text-lg font-medium p-2 rounded-lg hover:bg-blue-600 transition duration-300 transform hover:scale-105"
-              >
-                <FiUserPlus className="text-xl" />
-                <span>Add Doctor</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/view-doctors"
-                className="flex items-center space-x-3 text-lg font-medium p-2 rounded-lg hover:bg-blue-600 transition duration-300 transform hover:scale-105"
-              >
-                <FiList className="text-xl" />
-                <span>View Doctors</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/add-report"
-                className="flex items-center space-x-3 text-lg font-medium p-2 rounded-lg hover:bg-blue-600 transition duration-300 transform hover:scale-105"
-              >
-                <FiFilePlus className="text-xl" />
-                <span>Add Patient Report</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/addedReports"
-                className="flex items-center space-x-3 text-lg font-medium p-2 rounded-lg hover:bg-blue-600 transition duration-300 transform hover:scale-105"
-              >
-                <FiFileText className="text-xl" />
-                <span>Manage Reports</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Logout Button */}
-        <div className="absolute bottom-20 left-0 w-full px-5">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center space-x-3 p-2 rounded-lg bg-red-600 hover:bg-red-700 text-lg font-medium transition duration-300 transform hover:scale-105"
-          >
-            <span>Logout</span>
-          </button>
-        </div>
-
-        <div className="text-center text-sm text-gray-300 absolute bottom-0 left-0 w-full p-5">
-          © 2024 Healthcare Management
-        </div>
-      </div>
-
-      {/* Background Overlay (Visible on mobile screens when sidebar is open) */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-30"
-          onClick={toggleSidebar} // Clicking outside the sidebar will also close it
-        ></div>
-      )}
-    </>
+        Log Out
+      </button>
+    </div>
   );
 };
 
-export default Sidebar;
+const SidebarItem = ({
+  Icon,
+  label,
+  link,
+  selected,
+  dropdownItems,
+  dropdownOpen,
+  handleItemClick,
+}) => {
+  const isSelected = selected === label;
+  const isDropdownOpen = dropdownOpen === label;
+
+  return (
+    <motion.div
+      whileHover={{
+        borderColor: "#E76F51",
+        transition: { duration: 0.3 },
+      }}
+      className={`relative flex flex-col cursor-pointer p-4 rounded-lg font-russo text-xl ${
+        isSelected ? "border-2 border-primary" : "border-2 border-transparent"
+      }`}
+      onClick={() => handleItemClick(label)}
+      initial={{ borderColor: "transparent" }}
+      animate={{
+        borderColor: isSelected ? "#E76F51" : "transparent",
+        transition: { duration: 0.3 },
+      }}
+    >
+      {link && !dropdownItems ? (
+        <Link to={link}>
+          <motion.div
+            whileHover={{
+              scale: 1.2,
+              color: "#E76F51",
+              transition: { duration: 0.3 },
+            }}
+            className={`flex items-center space-x-3 ${
+              isSelected ? "text-primary" : "text-light"
+            }`}
+          >
+            <Icon className="text-3xl" />
+            <span>{label}</span>
+          </motion.div>
+        </Link>
+      ) : (
+        <motion.div
+          whileHover={{
+            scale: 1.2,
+            color: "#E76F51",
+            transition: { duration: 0.3 },
+          }}
+          className={`flex items-center space-x-3 ${
+            isSelected ? "text-primary" : "text-light"
+          }`}
+        >
+          <Icon className="text-3xl" />
+          <span>{label}</span>
+        </motion.div>
+      )}
+
+      {/* Dropdown Menu */}
+      {dropdownItems && isDropdownOpen && (
+        <div className="absolute left-full ml-2 bg-dark shadow-lg rounded-lg w-48 z-50">
+          <ul className="py-2 space-y-2">
+            {dropdownItems.map((item) => (
+              <li
+                key={item.label}
+                className="px-4 py-2 hover:bg-primary hover:text-light rounded-lg"
+              >
+                <Link to={item.link}>{item.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </motion.div>
+  );
+};

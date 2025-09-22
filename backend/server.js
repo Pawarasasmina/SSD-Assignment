@@ -29,21 +29,29 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
+const productRoutes = require("./routes/productRoutes");
+app.use("/api/products", productRoutes);
+
+const promotionRoutes = require("./routes/promotionRoutes");
+app.use("/api/promotions", promotionRoutes);
 
 const userRoutes = require("./routes/userRoutes"); // Import userRoutes
 app.use("/api/users", userRoutes); // Use the userRoutes for the /api/users endpoint
 
-const appointmentsRoute = require("./routes/appointmentsRoute"); // Import userRoutes
-app.use("/api/appointments", appointmentsRoute); // Use the userRoutes for the /api/users endpoint
+const salesRoutes = require("./routes/shops");
+app.use("/api/shops", salesRoutes);
 
-const paymentRoutes = require("./routes/paymentRoutes"); // Import userRoutes
-app.use("/api/payments", paymentRoutes); // Use the userRoutes for the /api/users endpoint
+const cartproductRoutes = require("./routes/cartproductRoutes");
+app.use("/api/cartProduct", cartproductRoutes);
 
-const doctorRoutes = require("./routes/doctorRoutes"); // Import reportRoutes
-app.use("/api/doctors", doctorRoutes); // Use the reportRoutes for the /api/reports endpoint
+const previousOrderRoutes = require("./routes/previousOrderRoutes");
+app.use("/api/previousOrders", previousOrderRoutes);
 
-const MedicalReportRoutes = require("./routes/MedicalReportsRoutes");
-app.use("/api/medicalReport", MedicalReportRoutes);
+const wishlistRoutes = require("./routes/wishlistRoutes");
+app.use("/api/wishlist", wishlistRoutes);
+
+const feedback = require("./routes/feedback");
+app.use("/api/feedback", feedback);
 
 // Start the server
 app.listen(port, () => {

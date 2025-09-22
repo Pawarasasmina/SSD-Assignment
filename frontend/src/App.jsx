@@ -1,141 +1,220 @@
-import { useEffect, useState } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-  matchPath,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SellerLayout from "./layouts/SellerLayout"; // Import SellerLayout
+import AdminLayout from "./layouts/AdminLayout"; // Import AdminLayout
+import ClientLayout from "./layouts/ClientLayout";
+import { Overview } from "./pages/Overview";
+import { LoginRegister } from "./pages/LoginRegister";
+import { AddProduct } from "./pages/AddProduct"; // Import the AddProduct component
+import { AllProducts } from "./pages/AllProducts";
+import { Promotions } from "./pages/Promotions";
+import { Inventory } from "./pages/Inventory";
+import { SellerProfile } from "./pages/SellerProfile";
+import { CreateAdmin } from "./pages/CreateAdmin";
+import { CreateSeller } from "./pages/CreateSeller";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import Shoppanel from "./pages/Shoppanel";
+import Mapmodel from "./pages/Mapmodel";
+import IndexPage from "./pages/IndesxPage";
+import ItemList from "./pages/ItemList";
+import CartPage from "./pages/CartPage";
+import PurchasingPage from "./pages/PurchasingPage";
+import Wishlist from "./pages/Wishlist";
+import Profile from "./pages/Profile";
+import ScrollToTop from "./pages/ScrollToTop";
+import EditCartItem from "./pages/EditCartItem";
+import InsertFeedback from "./pages/InsertFeedback";
+import FeedbackList from "./pages/FeedbackList";
 
-// Navbar and Footer components
-import Navbar from "./utils/navbar";
-import Footerm from "./utils/Footerm";
-import SideItemBar from "./utils/sideItemBar";
-
-// Pages
-import Home from "./pages/home";
-import Login from "./pages/login"; // Importing the login page
-import Register from "./pages/register"; // Importing the register page
-import Profile from "./pages/Profile"; // Importing the profile page
-import DisplayAppointments from "./pages/displayAppointments"; // Importing the appointment page
-import PaymentProcess from "./pages/paymentProcess";
-import AddDoctor from "./pages/AddDoctor";
-import DoctorList from "./pages/DoctorList";
-import AddMedicalReportForm from "./pages/AddMedicalReportForm";
-import AddedReports from "./pages/AddedReports";
-import ReportDetails from "./pages/ReportDetails";
-import MedicalReportsDisplay from "./pages/medicalReportsDisplay";
-import Appointment from "./pages/Appointment";
-
-// Loading component
-import Loading from "./utils/loading";
-
-const AppContent = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
-
-  // Paths where Navbar and Footer should not appear
-  const excludeNavbarFooter = [
-    "/",
-    "/register",
-    "/addDoctor",
-    "/view-doctors",
-    "/add-report",
-    "/addedReports",
-    "/report/:id",
-  ];
-
-  // Paths where SideItemBar should not appear (including Appointment route)
-  const excludeSideItemBar = [
-    "/Appointment",
-    "/",
-    "/register",
-    "/addDoctor",
-    "/view-doctors",
-    "/add-report",
-    "/addedReports",
-    "/report/:id", // Exclude SideItemBar from Appointment page
-  ];
-
-  // Paths where loading screen should not appear
-  const noLoadingPaths = [
-    "/addDoctor",
-    "/view-doctors",
-    "/add-report",
-    "/addedReports",
-    "/report/:id",
-  ];
-
-  // Check if the current path is in the list of paths where loading should not appear
-  const isNoLoadingPath = noLoadingPaths.some((path) =>
-    matchPath(path, location.pathname)
-  );
-
-  useEffect(() => {
-    if (!isNoLoadingPath) {
-      setIsLoading(true);
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    } else {
-      setIsLoading(false);
-    }
-  }, [location, isNoLoadingPath]);
-
-  return (
-    <div className="relative flex-col min-h-screen overflow-hidden lgs:items-center">
-      {/* Conditionally render Navbar based on the current path */}
-      {!excludeNavbarFooter.includes(location.pathname) && <Navbar />}
-
-      <div className="flex-grow">
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/" element={<Login />} /> {/* Login route */}
-            <Route path="/register" element={<Register />} />{" "}
-            {/* Register route */}
-            <Route path="/profile" element={<Profile />} />{" "}
-            {/* Profile route */}
-            <Route path="/payment" element={<DisplayAppointments />} />
-            <Route path="/payment-process" element={<PaymentProcess />} />
-            <Route path="/medical-report" element={<MedicalReportsDisplay />} />
-            <Route path="/addDoctor" element={<AddDoctor />} />
-            <Route path="/view-doctors" element={<DoctorList />} />
-            <Route path="/add-report" element={<AddMedicalReportForm />} />
-            <Route path="/addedReports" element={<AddedReports />} />
-            <Route path="/report/:id" element={<ReportDetails />} />
-            <Route path="/Appointment" element={<Appointment />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        )}
-      </div>
-
-      {/* Conditionally render SideItemBar based on the current path and isLoading state */}
-      {!excludeSideItemBar.includes(location.pathname) && !isLoading && (
-        <div className="hidden lgs:flex mds:flex items-center justify-center">
-          <SideItemBar />
-        </div>
-      )}
-
-      {/* Conditionally render Footer based on the current path */}
-      {!excludeNavbarFooter.includes(location.pathname) && (
-        <div className="hidden sms:flex">
-          <Footerm />
-        </div>
-      )}
-    </div>
-  );
+const toggleTheme = () => {
+  document.documentElement.classList.toggle("friend-theme");
 };
 
-const App = () => (
-  <BrowserRouter>
-    <AppContent />
-  </BrowserRouter>
-);
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Public Route */}
+        <Route path="/" element={<LoginRegister />} />
+
+        {/* Seller Routes */}
+        <Route
+          path="/overview"
+          element={
+            <SellerLayout>
+              <Overview />
+            </SellerLayout>
+          }
+        />
+        <Route
+          path="/addproduct"
+          element={
+            <SellerLayout>
+              <AddProduct />
+            </SellerLayout>
+          }
+        />
+        <Route
+          path="/allproducts"
+          element={
+            <SellerLayout>
+              <AllProducts />
+            </SellerLayout>
+          }
+        />
+        <Route
+          path="/promotions"
+          element={
+            <SellerLayout>
+              <Promotions />
+            </SellerLayout>
+          }
+        />
+        <Route
+          path="/inventory"
+          element={
+            <SellerLayout>
+              <Inventory />
+            </SellerLayout>
+          }
+        />
+        <Route
+          path="/sellerProfile"
+          element={
+            <SellerLayout>
+              <SellerProfile />
+            </SellerLayout>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/adminDashboard"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/CreateAdmin"
+          element={
+            <AdminLayout>
+              <CreateAdmin />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/CreateSeller"
+          element={
+            <AdminLayout>
+              <CreateSeller />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/Mapmodel"
+          element={
+            <AdminLayout>
+              <Mapmodel />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/Shoppanel"
+          element={
+            <AdminLayout>
+              <Shoppanel />
+            </AdminLayout>
+          }
+        />
+
+        {/* Client Routes */}
+        <Route
+          path="/home"
+          element={
+            <ClientLayout>
+              <IndexPage />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <ClientLayout>
+              <CartPage />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ClientLayout>
+              <Profile />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/wishlist"
+          element={
+            <ClientLayout>
+              <Wishlist />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/itemlist"
+          element={
+            <ClientLayout>
+              <ItemList />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/purchase/:id"
+          element={
+            <ClientLayout>
+              <PurchasingPage />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/editcartitem/:id"
+          element={
+            <ClientLayout>
+              <EditCartItem />
+            </ClientLayout>
+          }
+        />
+        
+        <Route
+          path="/insertfeedback/:id"
+          element={
+            <ClientLayout>
+              <InsertFeedback />
+            </ClientLayout>
+          }
+        />
+
+        <Route
+          path="/feedbacklist"
+          element={
+            <ClientLayout>
+              <FeedbackList />
+            </ClientLayout>
+          }
+        />
+
+        
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;
