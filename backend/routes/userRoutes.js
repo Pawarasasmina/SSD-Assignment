@@ -84,10 +84,13 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Compare passwords directly (this should be hashed in a real application)
-    if (user.password !== password) {
+    
+    // Use the comparePassword method to securely verify password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+    
 
     const token = jwt.sign(
       { id: user.id, userLevel: user.userLevel }, // Removed sellerId from token
