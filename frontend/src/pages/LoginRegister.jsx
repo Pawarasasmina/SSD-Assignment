@@ -129,6 +129,7 @@ export const LoginRegister = () => {
         isRegistering: isRegistering // Tell backend if this is coming from register form
       });
       
+      
       console.log("Backend response:", response.data);
       
       const { token, user: loggedInUser } = response.data;
