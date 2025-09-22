@@ -5,6 +5,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 const AdminFeedbacks = () => {
+    // State management for component data
     const [feedbacks, setFeedbacks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -15,16 +16,16 @@ const AdminFeedbacks = () => {
     useEffect(() => {
         const fetchFeedbacks = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/api/feedback');
+                const res = await axios.get('http://localhost:3000/api/feedback');  // API call to fetch feedback data
                 setFeedbacks(res.data);
             } catch (error) {
+                // Handle API errors
                 setError('Error fetching feedbacks');
                 console.error("Error fetching feedbacks:", error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchFeedbacks();
     }, []);
 
