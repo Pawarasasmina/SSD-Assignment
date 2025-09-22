@@ -25,6 +25,8 @@ import ScrollToTop from "./pages/ScrollToTop";
 import EditCartItem from "./pages/EditCartItem";
 import InsertFeedback from "./pages/InsertFeedback";
 import FeedbackList from "./pages/FeedbackList";
+import { UserSessionProvider } from "./components/UserSession";
+import GoogleAuthProvider from "./components/GoogleAuthProvider";
 
 const toggleTheme = () => {
   document.documentElement.classList.toggle("friend-theme");
@@ -32,6 +34,8 @@ const toggleTheme = () => {
 
 function App() {
   return (
+    <UserSessionProvider>
+      <GoogleAuthProvider>
     <Router>
       <Routes>
         {/* Public Route */}
@@ -214,6 +218,8 @@ function App() {
         
       </Routes>
     </Router>
+</GoogleAuthProvider>
+    </UserSessionProvider>
   );
 }
 
