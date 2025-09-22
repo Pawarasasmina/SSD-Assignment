@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useUserSession } from "../components/UserSession"; // Import the useUserSession hook
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
 import {
   FaGooglePlusG,
   FaFacebookF,
@@ -106,6 +108,71 @@ export const LoginRegister = () => {
     }
   };
 
+    // Handler for both Google login and signup
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      console.log("Google auth success, credential received:", credentialResponse);
+      
+      if (!credentialResponse.credential) {
+        setError("Failed to get credentials from Google");
+        return;
+      }
+      
+      // Decode the credential to get user info for debug purposes
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log("Decoded Google credential:", decoded);
+      
+      // Send the token to your backend for verification
+      // The backend will handle both new registrations and existing user logins
+      const response = await axios.post('http://localhost:3000/api/users/google-auth', {
+        token: credentialResponse.credential,
+        isRegistering: isRegistering // Tell backend if this is coming from register form
+      });
+      
+      console.log("Backend response:", response.data);
+      
+      const { token, user: loggedInUser } = response.data;
+      
+      // Store token
+      localStorage.setItem("token", token);
+      
+      // Update user state
+      setUser(loggedInUser);
+      
+      // Redirect based on user level
+      if (loggedInUser.userLevel === 2) {
+        window.location.href = "/adminDashboard";
+      } else if (loggedInUser.userLevel === 1) {
+        window.location.href = "/overview";
+      } else {
+        window.location.href = "/home";
+      }
+      
+      const successMessage = isRegistering && response.data.isNewUser
+        ? "Registration successful! You are now logged in." 
+        : "Login successful!";
+      
+      setSuccess(successMessage);
+      setError("");
+    } catch (err) {
+      console.error("Google auth error:", err);
+      
+      // Handle specific error for existing account during registration
+      if (err.response?.status === 400 && err.response?.data?.accountExists && isRegistering) {
+        setError("An account with this Google email already exists. Please use the Sign In form instead.");
+        // Optionally, switch to login form
+        setTimeout(() => {
+          setIsRegistering(false);
+        }, 2000);
+      } else {
+        // Generic error handling
+        const errorMsg = err.response?.data?.message || err.message || "Google authentication failed";
+        setError(errorMsg);
+      }
+      setError(errorMsg);
+    }
+  };
+
   return (
     <div className={styles["login-register-page"]}>
       <div
@@ -121,19 +188,19 @@ export const LoginRegister = () => {
         >
           <form onSubmit={handleLogin}>
             <h1>Sign In</h1>
-            <div className={styles["social-icons"]}>
-              <a href="#" className={styles.icon}>
-                <FaGooglePlusG />
-              </a>
-              <a href="#" className={styles.icon}>
-                <FaFacebookF />
-              </a>
-              <a href="#" className={styles.icon}>
-                <FaGithub />
-              </a>
-              <a href="#" className={styles.icon}>
-                <FaLinkedinIn />
-              </a>
+            <div className={styles["social-container"]}>
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={(error) => {
+                  console.error("Google login error:", error);
+                  setError("Google login failed. Please try again.");
+                }}
+                useOneTap={false}
+                theme="filled_blue"
+                text="signin_with"
+                shape="rectangular"
+                size="medium"
+              />
             </div>
             <span>or use your email and password</span>
             <div
@@ -177,6 +244,21 @@ export const LoginRegister = () => {
         >
           <form onSubmit={handleRegister}>
             <h1>Sign Up</h1>
+            <div className={styles["social-container"]}>
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={(error) => {
+                  console.error("Google login error:", error);
+                  setError("Google login failed. Please try again.");
+                }}
+                useOneTap={false}
+                theme="filled_blue"
+                text="signup_with"
+                shape="rectangular"
+                size="medium"
+              />
+            </div>
+            <span>or sign up with email</span>
             <div
               className={`${styles["inputGroup"]} ${styles["sign-up-input"]}`}
             >

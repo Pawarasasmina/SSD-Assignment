@@ -99,6 +99,22 @@ body {
   color: #fff;
 }
 
+.social-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  width: 100%;
+  padding: 0 15px;
+}
+
+/* Style for Google OAuth button */
+.social-container > div {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
 .container a {
   color: #fff;
   font-size: 15px;
@@ -275,4 +291,33 @@ body {
 .toggle-panel p:has(+ p:hover) {
   font-weight: 500;
   color: rgb(199, 210, 254);
+}
+
+/* Add to LoginRegister.module.css */
+.social-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.social {
+  margin: 0 5px;
+  height: 40px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Google button styles */
+.social-container button {
+  cursor: pointer !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+.social-container button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
 }
