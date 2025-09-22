@@ -156,3 +156,52 @@ For more detailed information about each vulnerability and the implemented fixes
 3. [MongoDB Security](https://docs.mongodb.com/manual/security/)
 4. [React Security Best Practices](https://reactjs.org/docs/security.html)
 5. [OAuth 2.0 for Web Applications](https://oauth.net/2/)
+
+
+## Vulnerabilities Not Fixed
+
+While we've addressed the seven major vulnerabilities in our application, there are some security concerns that remain unaddressed due to various constraints:
+
+### 1. Outdated Dependencies (A06:2021 - Vulnerable and Outdated Components)
+
+**Issue**: The application uses several outdated npm packages with known security vulnerabilities.
+
+**Reason for not fixing**: 
+- Complete dependency updates would require extensive regression testing
+- Some legacy features depend on specific versions of these packages
+- Certain package updates would require significant code refactoring beyond the scope of this assignment
+
+**Mitigation**: A comprehensive dependency update plan has been documented for future implementation phases.
+
+### 2. Rate Limiting (A04:2021 - Insecure Design)
+
+**Issue**: The API lacks rate limiting, making it vulnerable to brute force attacks and potential DoS situations.
+
+**Reason for not fixing**:
+- Implementation requires changes to the infrastructure configuration
+- Current hosting environment has limitations for implementing proper rate limiting
+- Would require modifications to authentication flow and user experience
+
+**Mitigation**: Documentation added to highlight this as a priority for the next security enhancement phase.
+
+### 3. Server-Side Request Forgery (SSRF) Protection (A10:2021 - Server-Side Request Forgery)
+
+**Issue**: The application makes HTTP requests based on user input in some admin features without proper validation.
+
+**Reason for not fixing**:
+- This vulnerability exists in rarely-used administrative features
+- Complete fix requires architectural changes to how external services are called
+- Limited potential impact due to internal network configuration
+
+**Mitigation**: Admin documentation updated to warn about the potential security implications.
+
+### 4. Security Logging and Monitoring (A09:2021 - Security Logging and Monitoring Failures)
+
+**Issue**: The application has insufficient logging of security events and lacks a proper monitoring system.
+
+**Reason for not fixing**:
+- Requires implementation of a comprehensive logging infrastructure
+- Needs integration with external monitoring tools
+- Storage and processing of logs requires additional infrastructure planning
+
+**Mitigation**: Basic error logging has been enhanced, but comprehensive security logging remains a future task.
