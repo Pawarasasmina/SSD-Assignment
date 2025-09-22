@@ -347,16 +347,7 @@ useEffect(() => {
         className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Phone:</label>
-      <input
-        type="text"
-        name="phone"
-        value={personalInfo.phone}
-        onChange={handleInfoChange}
-        className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
+  
     <div className="mt-6 text-right">
       <button
         className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
