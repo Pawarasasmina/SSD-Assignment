@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require('google-auth-library');
+
+
+
+// Initialize Google OAuth client
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+
 
 // JWT Secret Key
 const JWT_SECRET =
@@ -346,5 +354,102 @@ router.post("/admin-login", async (req, res) => {
       .json({ message: "Failed to login admin", error: error.message });
   }
 });
+
+// Google OAuth authentication endpoint
+router.post("/google-auth", async (req, res) => {
+  const { token, isRegistering } = req.body;
+  
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+  
+  try {
+    // Log the token for debugging (remove in production)
+    console.log("Received Google token:", token.substring(0, 20) + "...");
+    console.log("Is registering:", isRegistering ? "yes" : "no");
+    
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    
+    const payload = ticket.getPayload();
+    console.log("Google payload:", payload);
+    
+    // Check if user exists in your database
+    let user = await User.findOne({ email: payload.email });
+    
+    // Handle registration attempt with existing account
+    if (user && isRegistering) {
+      console.log("User attempted to register with existing Google account:", user.email);
+      return res.status(400).json({ 
+        message: "An account with this Google email already exists. Please sign in instead.",
+        accountExists: true
+      });
+    }
+    
+    if (!user) {
+      // Create a new user if they don't exist
+      user = new User({
+        name: payload.name,
+        email: payload.email,
+        // Generate a random secure password
+        password: require('crypto').randomBytes(16).toString('hex'),
+        phone: "", // Default empty phone
+        userLevel: 0, // Default to customer level
+        profilePicture: payload.picture, // Store Google profile picture URL
+      });
+      
+      await user.save();
+      console.log("Created new user from Google login:", user.email);
+    }
+    
+    // Generate JWT token
+    const authToken = jwt.sign(
+      { id: user.id, userLevel: user.userLevel },
+      process.env.JWT_SECRET || "your_jwt_secret",
+      {
+        expiresIn: "1h",
+          }
+    );
+    
+    let responseUser = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+      userLevel: user.userLevel,
+      id: user.id,
+    };
+    
+    // Add shopId for sellers (userLevel === 1)
+    if (user.userLevel === 1) {
+      responseUser.shopId = user.shopId;
+    }
+    
+    // Customize the message based on whether this is a new registration or login
+    const isNewUser = user.createdAt && Date.now() - user.createdAt < 10000;
+    const message = isRegistering 
+      ? isNewUser
+        ? "Google registration successful"
+        : "Google authentication successful" // This shouldn't happen now with our error above
+      : "Google login successful";
+      
+    res.status(200).json({
+      message: message,
+      token: authToken,
+      user: responseUser,
+      isNewUser: isNewUser // Indicates if user was just created
+    });
+    
+  } catch (error) {
+    console.error("Google authentication failed:", error.message);
+    res.status(400).json({ 
+      message: "Google authentication failed", 
+      error: error.message 
+    });
+  }
+});
+
 
 module.exports = router;
