@@ -1,128 +1,632 @@
-# PixelPlaza: Secure E-commerce Platform
+# SE4030 – Secure Software Development Assignment
 
-## Project Information
-This repository contains a secure MERN stack e-commerce application (PixelPlaza) that has been hardened against the OWASP Top 10 vulnerabilities. The project demonstrates the implementation of security best practices in a full-stack web application.
+## Group Information
+- Member 1: [Your Name] - [Your ID]
+- Member 2: [Team Member Name] - [ID]
+- Member 3: [Team Member Name] - [ID]
+- Member 4: [Team Member Name] - [ID]
 
-## Group Members
-- Student Name (IT12345678)
-- Student Name (IT12345678)
-- Student Name (IT12345678)
-- Student Name (IT12345678)
+## Project Links
+- **Original Project**: [Link to the original Healthcare Management System]
+- **Modified Project**: [Link to your fixed repository]
+- **Video Presentation**: [YouTube Link - To be added]
 
-## Links
-- [Original Vulnerable Project](https://github.com/username/vulnerable-pixelplaza)
-- [Secure Version](https://github.com/username/SE-S1-WD-09-PixelPlaza)
-- [YouTube Demo Video](https://youtube.com/watch?v=demo)
+## Project Overview
+This repository contains a Healthcare Management System with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
 
-## Setup Instructions
+## Security Vulnerabilities and Fixes
+
+We have identified and fixed the following 7 security vulnerabilities in the application, aligned with OWASP Top 10 2021 categories:
+
+
+
+### 1. Hardcoded Database Credentials (A07:2021 – Identification and Authentication Failures)
+**Issue**: Hardcoded database credentials in source code.
+
+**Fix**: Moved database connection strings to environment variables and implemented proper secret management.
+
+### 2. Hardcoded JWT Secrets (A05:2021 – Security Misconfiguration)
+**Issue**: Hardcoded JWT secrets in source code.
+
+**Fix**: Moved all sensitive JWT configuration to environment variables using dotenv.
+
+### 3. Missing Security Headers & CORS Misconfiguration (A05:2021 – Security Misconfiguration)
+**Issue**: Missing security headers and permissive CORS policy.
+
+**Fix**: Implemented Helmet.js for security headers and restricted CORS configuration.
+
+### 4. Lack of Input Validation (A04:2021 – Insecure Design)
+**Issue**: Lack of input validation and sanitization across multiple routes.
+
+**Fix**: Implemented comprehensive validation and sanitization middleware for all user inputs.
+
+### 5. Password Storage in Plain Text (A02:2021 – Cryptographic Failures)
+**Issue**: Passwords stored in plain text in the database.
+
+**Fix**: Implemented bcrypt password hashing for secure password storage and verification.
+
+### 6. NoSQL Injection (A03:2021 – Injection)
+**Issue**: NoSQL injection vulnerabilities in MongoDB queries with unvalidated user input.
+
+**Fix**: Implemented express-validator for input validation and parameterized MongoDB queries.
+
+### 7. Insecure File Upload Configuration (A01:2021 – Broken Access Control)
+**Issue**: Insecure file upload configuration allowing potentially malicious files.
+
+**Fix**: Implemented proper file type validation, size restrictions, and secure file naming.
+
+## OAuth Implementation
+
+We have successfully implemented Google OAuth authentication in the application. This implementation:
+
+1. Allows users to sign in using their Google accounts
+2. Securely handles authentication tokens
+3. Stores relevant user information in the database
+4. Follows OAuth 2.0 best practices for web applications
+
+## Testing Tools Used
+- OWASP ZAP for dynamic application security testing
+- npm audit for dependency vulnerability scanning
+- MongoDB Compass for database integrity verification
+- Postman for API endpoint testing
+- Browser developer tools for frontend security analysis
+
+## Running the Application
 
 ### Prerequisites
-- Node.js (v16+)
-- MongoDB
-- Git
+- Node.js (v14 or higher)
+- MongoDB instance
+- npm or yarn package manager
 
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/username/SE-S1-WD-09-PixelPlaza.git
-cd SE-S1-WD-09-PixelPlaza
+### Backend Setup
+1. Navigate to the backend directory:
+```
+cd backend
 ```
 
-2. Backend setup:
-```bash
-cd backend
+2. Install dependencies:
+```
 npm install
-# Create a .env file with appropriate configuration
+```
+
+3. Create a `.env` file with the following variables:
+```
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+4. Start the server:
+```
 npm start
 ```
 
-3. Frontend setup:
-```bash
-cd ../frontend/ui
+### Frontend Setup
+1. Navigate to the frontend directory:
+```
+cd frontend
+```
+
+2. Install dependencies:
+```
 npm install
+```
+
+3. Start the development server:
+```
 npm run dev
 ```
 
-## Identified Vulnerabilities & Fixes
+4. Access the application at http://localhost:5173
 
-### 1. A01:2021 – Broken Access Control
-**Issue**: Insufficient authorization checks in route handlers allowing users to access/modify resources they shouldn't.
+## Best Practices Implemented
+- Secure password storage using bcrypt
+- Environment variable management for secrets
+- Input validation and sanitization
+- CORS protection
+- Security headers using Helmet.js
+- XSS prevention
+- File upload security measures
+- MongoDB query injection prevention
+- OAuth 2.0 implementation best practices
 
-**Fix**: Implemented JWT-based middleware that verifies user roles and permissions before allowing access to protected routes.
+## Detailed Documentation
+For more detailed information about each vulnerability and the implemented fixes, please refer to the [SECURITY_VULNERABILITIES.md](./SECURITY_VULNERABILITIES.md) file in this repository.
 
-### 2. A02:2021 – Cryptographic Failures
-**Issue**: User passwords stored in plain text or with weak hashing algorithms.
-
-**Fix**: Implemented bcrypt for password hashing with appropriate salt rounds and secured all sensitive data in transit with HTTPS.
-
-### 3. A03:2021 – Injection
-**Issue**: NoSQL injection vulnerabilities in MongoDB queries with unvalidated user input.
-
-**Fix**: Added input validation and sanitization using express-validator and implemented MongoDB query parameterization.
-
-### 4. A05:2021 – Security Misconfiguration
-**Issue**: Default configurations and unnecessary exposed services creating security gaps.
-
-**Fix**: Applied Helmet.js to set secure HTTP headers and implemented proper configuration for all environments.
-
-### 5. A07:2021 – Identification and Authentication Failures
-**Issue**: Weak password policies and insufficient authentication mechanisms.
-
-**Fix**: Implemented strong password requirements, account lockout mechanisms, and multi-factor authentication options.
-
-### 6. A08:2021 – Software and Data Integrity Failures
-**Issue**: Insecure handling of uploads allowing malicious files to be processed.
-
-**Fix**: Implemented robust file validation, content-type checking, and virus scanning for all uploaded files.
-
-### 7. A09:2021 – Security Logging and Monitoring Failures
-**Issue**: Insufficient logging of security events making intrusion detection difficult.
-
-**Fix**: Implemented Winston for comprehensive logging of authentication events, access control violations, and other security-relevant activities.
-
-## OAuth/OpenID Connect Implementation
-
-We implemented Google OAuth 2.0 Authorization Code flow to provide secure third-party authentication. This implementation:
-
-- Allows users to sign in with their Google accounts
-- Verifies identity using OpenID Connect
-- Securely handles access tokens and refresh tokens
-- Provides proper session management for authenticated users
-
-## Security Tools Used
-
-1. **npm audit**: For dependency vulnerability scanning
-2. **ESLint with security plugins**: For static code analysis to detect security issues
-3. **Semgrep**: For pattern-based security scanning
-4. **OWASP ZAP**: For dynamic application security testing
-5. **MongoDB Compass**: For database security assessment
-
-## Evidence
-
-### Vulnerability Scanning Results
-- `/evidence/npm-audit-results.pdf`
-- `/evidence/semgrep-scan-results.pdf`
-- `/evidence/zap-scan-report.pdf`
-
-### Vulnerability Demonstrations
-- `/evidence/screenshots/before-fix-injection.png`
-- `/evidence/screenshots/after-fix-injection.png`
-- `/evidence/curl/authentication-bypass-demo.txt`
-
-### OAuth Implementation
-- `/evidence/screenshots/oauth-flow-demonstration.png`
-- `/evidence/oauth-sequence-diagram.pdf`
+## Screenshots
+- [Before Fix: Plain Text Password Storage](/evidence/screenshots/before-fix-password.png)
+- [After Fix: Hashed Password Implementation](/evidence/screenshots/after-fix-password.png)
+- [Before Fix: NoSQL Injection](/evidence/screenshots/before-fix-injection.png)
+- [After Fix: Parameterized Queries](/evidence/screenshots/after-fix-injection.png)
 
 ## Individual Contributions
 
-| Student ID | Contributions |
-|------------|---------------|
-| IT12345678 | A01: Broken Access Control, A05: Security Misconfiguration |
-| IT12345678 | A02: Cryptographic Failures, OAuth Implementation |
-| IT12345678 | A03: Injection, A09: Security Logging and Monitoring Failures |
-| IT12345678 | A07: Identification and Authentication Failures, A08: Software and Data Integrity Failures |
+| Member ID | Vulnerabilities Fixed |
+|----------|------------------------|
+| IT12345678 | Hardcoded Database Credentials (A07: Identification and Authentication Failures), Hardcoded JWT Secrets (A05: Security Misconfiguration) |
+| IT23456789 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
+| IT34567890 | Password Storage in Plain Text (A02: Cryptographic Failures) + OAuth Implementation |
+| IT45678901 | NoSQL Injection (A03: Injection), Insecure File Upload Configuration (A01: Broken Access Control) |
 
----
+## References
+1. [OWASP Top Ten](https://owasp.org/www-project-top-ten/)
+2. [Express.js Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
+3. [MongoDB Security](https://docs.mongodb.com/manual/security/)
+4. [React Security Best Practices](https://reactjs.org/docs/security.html)
+5. [OAuth 2.0 for Web Applications](https://oauth.net/2/)
+# SE4030 – Secure Software Development Assignment
 
-*This project was developed as part of the SE4030 Secure Software Development module at SLIIT.*
+## Group Information
+- Member 1: [Your Name] - [Your ID]
+- Member 2: [Team Member Name] - [ID]
+- Member 3: [Team Member Name] - [ID]
+- Member 4: [Team Member Name] - [ID]
+
+## Project Links
+- **Original Project**: [Link to the original Healthcare Management System]
+- **Modified Project**: [Link to your fixed repository]
+- **Video Presentation**: [YouTube Link - To be added]
+
+## Project Overview
+This repository contains a Healthcare Management System with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
+
+## Security Vulnerabilities and Fixes
+
+We have identified and fixed the following 7 security vulnerabilities in the application, aligned with OWASP Top 10 2021 categories:
+
+
+
+### 1. Hardcoded Database Credentials (A07:2021 – Identification and Authentication Failures)
+**Issue**: Hardcoded database credentials in source code.
+
+**Fix**: Moved database connection strings to environment variables and implemented proper secret management.
+
+### 2. Hardcoded JWT Secrets (A05:2021 – Security Misconfiguration)
+**Issue**: Hardcoded JWT secrets in source code.
+
+**Fix**: Moved all sensitive JWT configuration to environment variables using dotenv.
+
+### 3. Missing Security Headers & CORS Misconfiguration (A05:2021 – Security Misconfiguration)
+**Issue**: Missing security headers and permissive CORS policy.
+
+**Fix**: Implemented Helmet.js for security headers and restricted CORS configuration.
+
+### 4. Lack of Input Validation (A04:2021 – Insecure Design)
+**Issue**: Lack of input validation and sanitization across multiple routes.
+
+**Fix**: Implemented comprehensive validation and sanitization middleware for all user inputs.
+
+### 5. Password Storage in Plain Text (A02:2021 – Cryptographic Failures)
+**Issue**: Passwords stored in plain text in the database.
+
+**Fix**: Implemented bcrypt password hashing for secure password storage and verification.
+
+### 6. NoSQL Injection (A03:2021 – Injection)
+**Issue**: NoSQL injection vulnerabilities in MongoDB queries with unvalidated user input.
+
+**Fix**: Implemented express-validator for input validation and parameterized MongoDB queries.
+
+### 7. Insecure File Upload Configuration (A01:2021 – Broken Access Control)
+**Issue**: Insecure file upload configuration allowing potentially malicious files.
+
+**Fix**: Implemented proper file type validation, size restrictions, and secure file naming.
+
+## OAuth Implementation
+
+We have successfully implemented Google OAuth authentication in the application. This implementation:
+
+1. Allows users to sign in using their Google accounts
+2. Securely handles authentication tokens
+3. Stores relevant user information in the database
+4. Follows OAuth 2.0 best practices for web applications
+
+## Testing Tools Used
+- OWASP ZAP for dynamic application security testing
+- npm audit for dependency vulnerability scanning
+- MongoDB Compass for database integrity verification
+- Postman for API endpoint testing
+- Browser developer tools for frontend security analysis
+
+## Running the Application
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB instance
+- npm or yarn package manager
+
+### Backend Setup
+1. Navigate to the backend directory:
+```
+cd backend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Create a `.env` file with the following variables:
+```
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+4. Start the server:
+```
+npm start
+```
+
+### Frontend Setup
+1. Navigate to the frontend directory:
+```
+cd frontend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Start the development server:
+```
+npm run dev
+```
+
+4. Access the application at http://localhost:5173
+
+## Best Practices Implemented
+- Secure password storage using bcrypt
+- Environment variable management for secrets
+- Input validation and sanitization
+- CORS protection
+- Security headers using Helmet.js
+- XSS prevention
+- File upload security measures
+- MongoDB query injection prevention
+- OAuth 2.0 implementation best practices
+
+## Detailed Documentation
+For more detailed information about each vulnerability and the implemented fixes, please refer to the [SECURITY_VULNERABILITIES.md](./SECURITY_VULNERABILITIES.md) file in this repository.
+
+## Screenshots
+- [Before Fix: Plain Text Password Storage](/evidence/screenshots/before-fix-password.png)
+- [After Fix: Hashed Password Implementation](/evidence/screenshots/after-fix-password.png)
+- [Before Fix: NoSQL Injection](/evidence/screenshots/before-fix-injection.png)
+- [After Fix: Parameterized Queries](/evidence/screenshots/after-fix-injection.png)
+
+## Individual Contributions
+
+| Member ID | Vulnerabilities Fixed |
+|----------|------------------------|
+| IT12345678 | Hardcoded Database Credentials (A07: Identification and Authentication Failures), Hardcoded JWT Secrets (A05: Security Misconfiguration) |
+| IT23456789 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
+| IT34567890 | Password Storage in Plain Text (A02: Cryptographic Failures) + OAuth Implementation |
+| IT45678901 | NoSQL Injection (A03: Injection), Insecure File Upload Configuration (A01: Broken Access Control) |
+
+## References
+1. [OWASP Top Ten](https://owasp.org/www-project-top-ten/)
+2. [Express.js Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
+3. [MongoDB Security](https://docs.mongodb.com/manual/security/)
+4. [React Security Best Practices](https://reactjs.org/docs/security.html)
+5. [OAuth 2.0 for Web Applications](https://oauth.net/2/)
+# SE4030 – Secure Software Development Assignment
+
+## Group Information
+- Member 1: [Your Name] - [Your ID]
+- Member 2: [Team Member Name] - [ID]
+- Member 3: [Team Member Name] - [ID]
+- Member 4: [Team Member Name] - [ID]
+
+## Project Links
+- **Original Project**: [Link to the original Healthcare Management System]
+- **Modified Project**: [Link to your fixed repository]
+- **Video Presentation**: [YouTube Link - To be added]
+
+## Project Overview
+This repository contains a Healthcare Management System with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
+
+## Security Vulnerabilities and Fixes
+
+We have identified and fixed the following 7 security vulnerabilities in the application, aligned with OWASP Top 10 2021 categories:
+
+
+
+### 1. Hardcoded Database Credentials (A07:2021 – Identification and Authentication Failures)
+**Issue**: Hardcoded database credentials in source code.
+
+**Fix**: Moved database connection strings to environment variables and implemented proper secret management.
+
+### 2. Hardcoded JWT Secrets (A05:2021 – Security Misconfiguration)
+**Issue**: Hardcoded JWT secrets in source code.
+
+**Fix**: Moved all sensitive JWT configuration to environment variables using dotenv.
+
+### 3. Missing Security Headers & CORS Misconfiguration (A05:2021 – Security Misconfiguration)
+**Issue**: Missing security headers and permissive CORS policy.
+
+**Fix**: Implemented Helmet.js for security headers and restricted CORS configuration.
+
+### 4. Lack of Input Validation (A04:2021 – Insecure Design)
+**Issue**: Lack of input validation and sanitization across multiple routes.
+
+**Fix**: Implemented comprehensive validation and sanitization middleware for all user inputs.
+
+### 5. Password Storage in Plain Text (A02:2021 – Cryptographic Failures)
+**Issue**: Passwords stored in plain text in the database.
+
+**Fix**: Implemented bcrypt password hashing for secure password storage and verification.
+
+### 6. NoSQL Injection (A03:2021 – Injection)
+**Issue**: NoSQL injection vulnerabilities in MongoDB queries with unvalidated user input.
+
+**Fix**: Implemented express-validator for input validation and parameterized MongoDB queries.
+
+### 7. Insecure File Upload Configuration (A01:2021 – Broken Access Control)
+**Issue**: Insecure file upload configuration allowing potentially malicious files.
+
+**Fix**: Implemented proper file type validation, size restrictions, and secure file naming.
+
+## OAuth Implementation
+
+We have successfully implemented Google OAuth authentication in the application. This implementation:
+
+1. Allows users to sign in using their Google accounts
+2. Securely handles authentication tokens
+3. Stores relevant user information in the database
+4. Follows OAuth 2.0 best practices for web applications
+
+## Testing Tools Used
+- OWASP ZAP for dynamic application security testing
+- npm audit for dependency vulnerability scanning
+- MongoDB Compass for database integrity verification
+- Postman for API endpoint testing
+- Browser developer tools for frontend security analysis
+
+## Running the Application
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB instance
+- npm or yarn package manager
+
+### Backend Setup
+1. Navigate to the backend directory:
+```
+cd backend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Create a `.env` file with the following variables:
+```
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+4. Start the server:
+```
+npm start
+```
+
+### Frontend Setup
+1. Navigate to the frontend directory:
+```
+cd frontend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Start the development server:
+```
+npm run dev
+```
+
+4. Access the application at http://localhost:5173
+
+## Best Practices Implemented
+- Secure password storage using bcrypt
+- Environment variable management for secrets
+- Input validation and sanitization
+- CORS protection
+- Security headers using Helmet.js
+- XSS prevention
+- File upload security measures
+- MongoDB query injection prevention
+- OAuth 2.0 implementation best practices
+
+## Detailed Documentation
+For more detailed information about each vulnerability and the implemented fixes, please refer to the [SECURITY_VULNERABILITIES.md](./SECURITY_VULNERABILITIES.md) file in this repository.
+
+## Screenshots
+- [Before Fix: Plain Text Password Storage](/evidence/screenshots/before-fix-password.png)
+- [After Fix: Hashed Password Implementation](/evidence/screenshots/after-fix-password.png)
+- [Before Fix: NoSQL Injection](/evidence/screenshots/before-fix-injection.png)
+- [After Fix: Parameterized Queries](/evidence/screenshots/after-fix-injection.png)
+
+## Individual Contributions
+
+| Member ID | Vulnerabilities Fixed |
+|----------|------------------------|
+| IT12345678 | Hardcoded Database Credentials (A07: Identification and Authentication Failures), Hardcoded JWT Secrets (A05: Security Misconfiguration) |
+| IT23456789 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
+| IT34567890 | Password Storage in Plain Text (A02: Cryptographic Failures) + OAuth Implementation |
+| IT45678901 | NoSQL Injection (A03: Injection), Insecure File Upload Configuration (A01: Broken Access Control) |
+
+## References
+1. [OWASP Top Ten](https://owasp.org/www-project-top-ten/)
+2. [Express.js Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
+3. [MongoDB Security](https://docs.mongodb.com/manual/security/)
+4. [React Security Best Practices](https://reactjs.org/docs/security.html)
+5. [OAuth 2.0 for Web Applications](https://oauth.net/2/)
+# SE4030 – Secure Software Development Assignment
+
+## Group Information
+- Member 1: [Your Name] - [Your ID]
+- Member 2: [Team Member Name] - [ID]
+- Member 3: [Team Member Name] - [ID]
+- Member 4: [Team Member Name] - [ID]
+
+## Project Links
+- **Original Project**: [Link to the original Healthcare Management System]
+- **Modified Project**: [Link to your fixed repository]
+- **Video Presentation**: [YouTube Link - To be added]
+
+## Project Overview
+This repository contains a Healthcare Management System with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
+
+## Security Vulnerabilities and Fixes
+
+We have identified and fixed the following 7 security vulnerabilities in the application, aligned with OWASP Top 10 2021 categories:
+
+
+
+### 1. Hardcoded Database Credentials (A07:2021 – Identification and Authentication Failures)
+**Issue**: Hardcoded database credentials in source code.
+
+**Fix**: Moved database connection strings to environment variables and implemented proper secret management.
+
+### 2. Hardcoded JWT Secrets (A05:2021 – Security Misconfiguration)
+**Issue**: Hardcoded JWT secrets in source code.
+
+**Fix**: Moved all sensitive JWT configuration to environment variables using dotenv.
+
+### 3. Missing Security Headers & CORS Misconfiguration (A05:2021 – Security Misconfiguration)
+**Issue**: Missing security headers and permissive CORS policy.
+
+**Fix**: Implemented Helmet.js for security headers and restricted CORS configuration.
+
+### 4. Lack of Input Validation (A04:2021 – Insecure Design)
+**Issue**: Lack of input validation and sanitization across multiple routes.
+
+**Fix**: Implemented comprehensive validation and sanitization middleware for all user inputs.
+
+### 5. Password Storage in Plain Text (A02:2021 – Cryptographic Failures)
+**Issue**: Passwords stored in plain text in the database.
+
+**Fix**: Implemented bcrypt password hashing for secure password storage and verification.
+
+### 6. NoSQL Injection (A03:2021 – Injection)
+**Issue**: NoSQL injection vulnerabilities in MongoDB queries with unvalidated user input.
+
+**Fix**: Implemented express-validator for input validation and parameterized MongoDB queries.
+
+### 7. Insecure File Upload Configuration (A01:2021 – Broken Access Control)
+**Issue**: Insecure file upload configuration allowing potentially malicious files.
+
+**Fix**: Implemented proper file type validation, size restrictions, and secure file naming.
+
+## OAuth Implementation
+
+We have successfully implemented Google OAuth authentication in the application. This implementation:
+
+1. Allows users to sign in using their Google accounts
+2. Securely handles authentication tokens
+3. Stores relevant user information in the database
+4. Follows OAuth 2.0 best practices for web applications
+
+## Testing Tools Used
+- OWASP ZAP for dynamic application security testing
+- npm audit for dependency vulnerability scanning
+- MongoDB Compass for database integrity verification
+- Postman for API endpoint testing
+- Browser developer tools for frontend security analysis
+
+## Running the Application
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB instance
+- npm or yarn package manager
+
+### Backend Setup
+1. Navigate to the backend directory:
+```
+cd backend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Create a `.env` file with the following variables:
+```
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+4. Start the server:
+```
+npm start
+```
+
+### Frontend Setup
+1. Navigate to the frontend directory:
+```
+cd frontend
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Start the development server:
+```
+npm run dev
+```
+
+4. Access the application at http://localhost:5173
+
+## Best Practices Implemented
+- Secure password storage using bcrypt
+- Environment variable management for secrets
+- Input validation and sanitization
+- CORS protection
+- Security headers using Helmet.js
+- XSS prevention
+- File upload security measures
+- MongoDB query injection prevention
+- OAuth 2.0 implementation best practices
+
+## Detailed Documentation
+For more detailed information about each vulnerability and the implemented fixes, please refer to the [SECURITY_VULNERABILITIES.md](./SECURITY_VULNERABILITIES.md) file in this repository.
+
+## Screenshots
+- [Before Fix: Plain Text Password Storage](/evidence/screenshots/before-fix-password.png)
+- [After Fix: Hashed Password Implementation](/evidence/screenshots/after-fix-password.png)
+- [Before Fix: NoSQL Injection](/evidence/screenshots/before-fix-injection.png)
+- [After Fix: Parameterized Queries](/evidence/screenshots/after-fix-injection.png)
+
+## Individual Contributions
+
+| Member ID | Vulnerabilities Fixed |
+|----------|------------------------|
+| IT12345678 | Hardcoded Database Credentials (A07: Identification and Authentication Failures), Hardcoded JWT Secrets (A05: Security Misconfiguration) |
+| IT23456789 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
+| IT34567890 | Password Storage in Plain Text (A02: Cryptographic Failures) + OAuth Implementation |
+| IT45678901 | NoSQL Injection (A03: Injection), Insecure File Upload Configuration (A01: Broken Access Control) |
+
+## References
+1. [OWASP Top Ten](https://owasp.org/www-project-top-ten/)
+2. [Express.js Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)
+3. [MongoDB Security](https://docs.mongodb.com/manual/security/)
+4. [React Security Best Practices](https://reactjs.org/docs/security.html)
+5. [OAuth 2.0 for Web Applications](https://oauth.net/2/)
