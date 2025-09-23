@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require('google-auth-library');
+require('dotenv').config();
 
 
 
@@ -11,10 +12,12 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 
-// JWT Secret Key
-const JWT_SECRET =
-  process.env.JWT_SECRET ||
-  "e933a2f6a85c7950edee4cb716e68706006e7510717ce6a2d58cfd4cec88c3ec6b604e09806e8f0e26ee3ae3e1f5537b89e800234903ea957bec8bb5e1365ec8"; // Use environment variable or fallback
+// JWT Secret Key - must come from environment
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET is not defined in environment variables');
+  process.exit(1);
+}
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -411,10 +414,10 @@ router.post("/google-auth", async (req, res) => {
     // Generate JWT token
     const authToken = jwt.sign(
       { id: user.id, userLevel: user.userLevel },
-      process.env.JWT_SECRET || "your_jwt_secret",
+      JWT_SECRET,
       {
         expiresIn: "1h",
-          }
+      }
     );
     
     let responseUser = {
