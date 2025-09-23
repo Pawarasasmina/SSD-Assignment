@@ -53,6 +53,17 @@ app.use("/api/wishlist", wishlistRoutes);
 const feedback = require("./routes/feedback");
 app.use("/api/feedback", feedback);
 
+// Multer error handling middleware
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File too large. Maximum size is 5MB.' });
+    }
+    return res.status(400).json({ message: 'File upload error', error: err.message });
+  }
+  next(err);
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

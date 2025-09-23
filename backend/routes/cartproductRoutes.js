@@ -1,7 +1,33 @@
 const express = require("express");
 const router = express.Router();
 
+const { body, param, validationResult } = require('express-validator');
+
 const cartProduct = require("../models/cartProduct");
+
+
+// Validation middleware
+const validateRequest = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
+// Validation for cart product ID parameter
+const validateCartProductId = [
+  param('id').isMongoId().withMessage('Invalid cart product ID format'),
+  validateRequest
+];
+
+// Validation for user ID parameter
+const validateUserId = [
+  param('userId').isString().trim().notEmpty().withMessage('User ID is required'),
+  validateRequest
+];
+
+
 
 router.get("/test", (req, res) => res.send("route is working"));
 
@@ -29,20 +55,26 @@ router.get("/:id", (req, res) =>
     .catch(() => res.status(400).json({ msg: "CartItems getting by id failed" }))
 );
 
-// Get cart items by userId
-router.get("/user/:userId", (req, res) =>
+// Get cart items by userId with validation
+router.get("/user/:userId", validateUserId, (req, res) =>
   cartProduct
-    .find({ userId: req.params.userId }) // Filter cart items by userId
+    .find({ userId: req.params.userId })
     .then((cartProducts) => res.json(cartProducts))
-    .catch(() => res.status(400).json({ msg: "Fetching cart items by userId failed" }))
+    .catch((error) => res.status(400).json({ 
+      msg: "Fetching cart items by userId failed", 
+      error: error.message 
+    }))
 );
 
-// Update cart item by ID
-router.put("/:id", (req, res) =>
+// Update cart item by ID with validation
+router.put("/:id", validateCartProductId, (req, res) =>
   cartProduct
     .findByIdAndUpdate(req.params.id, req.body)
     .then(() => res.json({ msg: "CartItems updated successfully" }))
-    .catch(() => res.status(400).json({ msg: "CartItems update failed" }))
+    .catch((error) => res.status(400).json({ 
+      msg: "CartItems update failed", 
+      error: error.message 
+    }))
 );
 
 // Delete cart item by ID

@@ -2,6 +2,43 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 const Promotion = require("../models/Promotion");
+const { body, param, validationResult } = require('express-validator');
+const upload = require('../config/multerConfig');
+
+// Upload product image with enhanced security
+router.post('/upload/:id', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded or invalid file type' });
+    }
+
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Update product with image path
+    product.imageUrl = `/uploads/${req.file.filename}`;
+    await product.save();
+
+    res.json({ message: 'Image uploaded successfully', product });
+  } catch (error) {
+    res.status(500).json({ message: 'Error uploading file', error: error.message });
+  }
+});
+// Validation middleware
+const validateProductId = [
+  param('id').isMongoId().withMessage('Invalid product ID format'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  }
+];
+
+
 
 // Create a new product
 router.post("/", async (req, res) => {
@@ -92,9 +129,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a product by ID
-
-router.get("/:id", async (req, res) => {
+// Get a product by ID with validation
+router.get("/:id", validateProductId, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -105,6 +141,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch product", error: error.message });
   }
 });
+
 // Get products by shopID
 router.get("/shop/:shopID", async (req, res) => {
   try {
