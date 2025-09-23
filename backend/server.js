@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files (uploads) with proper CORS headers
 app.use('/uploads', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
-    ? process.env.ALLOWED_ORIGINS?.split(',')[0] || 'https://your-production-domain.com'
+    ? process.env.ALLOWED_ORIGINS?.split(',')[0] || ''
     : 'http://localhost:5173');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
