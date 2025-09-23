@@ -146,7 +146,7 @@ For more detailed information about each vulnerability and the implemented fixes
 | Member ID | Vulnerabilities Fixed |
 |----------|------------------------|
 | IT22137500 | Hardcoded Database Credentials (A07: Identification and Authentication Failures), Hardcoded JWT Secrets (A05: Security Misconfiguration) |
-| IT23456789 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
+| IT22170798 | Missing Security Headers & CORS Misconfiguration (A05: Security Misconfiguration), Lack of Input Validation (A04: Insecure Design) |
 | IT22166906 | Password Storage in Plain Text (A02: Cryptographic Failures) + OAuth Implementation |
 | IT22289520 | NoSQL Injection (A03: Injection), Insecure File Upload Configuration (A01: Broken Access Control) |
 
