@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-const dburl =
-  "mongodb+srv://Yehara:S123@cluster0.y694y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const dburl = process.env.MONGO_URI;
+
+if (!dburl) {
+  console.error("MONGO_URI is not defined in environment variables");
+  process.exit(1);
+}
 
 mongoose.set("strictQuery", true, "userNewUrlParser", true);
 
