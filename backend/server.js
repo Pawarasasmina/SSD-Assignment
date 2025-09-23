@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const multer = require("multer"); // Add this import
 require("dotenv").config(); // Load environment variables
 
 const app = express();
