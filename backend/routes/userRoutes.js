@@ -2,10 +2,13 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const { validateUserRegistration, preventXSS } = require('../middleware/validation');
 const { OAuth2Client } = require('google-auth-library');
 require('dotenv').config();
 
 
+// Apply XSS prevention to all routes
+router.use(preventXSS);
 
 // Initialize Google OAuth client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -50,7 +53,7 @@ const checkUserLevel = (requiredLevel) => {
 };
 
 // Register a new user (customer)
-router.post("/register", async (req, res) => {
+router.post("/register", validateUserRegistration, async (req, res) => {
   const { name, email, password, phone } = req.body;
 
   try {

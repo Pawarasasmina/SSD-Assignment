@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require("../models/Product");
 const Promotion = require("../models/Promotion");
 const { body, param, validationResult } = require('express-validator');
+const { validateProduct, preventXSS } = require('../middleware/validation');
 const upload = require('../config/multerConfig');
 
 // Upload product image with enhanced security
@@ -41,7 +42,7 @@ const validateProductId = [
 
 
 // Create a new product
-router.post("/", async (req, res) => {
+router.post("/", validateProduct, async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
