@@ -12,6 +12,15 @@ if (!fs.existsSync(uploadDir)) {
 // Define allowed file types
 const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
+// Create file filter
+const fileFilter = (req, file, cb) => {
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only JPEG, PNG and GIF are allowed.'), false);
+  }
+};
+
 // Set up multer for file uploads with enhanced security
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,14 +41,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// Create file filter
-const fileFilter = (req, file, cb) => {
-  if (allowedFileTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG and GIF are allowed.'), false);
-  }
-};
 
 // Configure multer with limits and file filter
 const upload = multer({ 
