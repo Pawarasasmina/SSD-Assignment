@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "security:verify": "node VerifySecurity.js",
+    "security:check": "node security/SecurityVerifier.js"
+  }
+}

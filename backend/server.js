@@ -1,23 +1,64 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const helmet = require('helmet'); // Add helmet import
 require("dotenv").config(); // Load environment variables
 
 const app = express();
 const port = 3000;
 
-// Configure CORS
+// Apply Helmet middleware to set security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://apis.google.com", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https://lh3.googleusercontent.com"],
+      connectSrc: ["'self'", "https://www.googleapis.com"]
+    }
+  },
+  crossOriginEmbedderPolicy: false // Disable for OAuth compatibility
+}));
+
+// Configure CORS with more restrictive settings
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with the URL of your frontend
+    origin: process.env.NODE_ENV === 'production' 
+      ? process.env.ALLOWED_ORIGINS?.split(',') || 'https://your-production-domain.com'
+      : 'http://localhost:5173',
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
+    maxAge: 86400, // Cache preflight requests for 1 day
   })
 );
+
+// Add custom security headers
+app.use((req, res, next) => {
+  // Additional security headers
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files (uploads) with proper CORS headers
+app.use('/uploads', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
+    ? process.env.ALLOWED_ORIGINS?.split(',')[0] || ''
+    : 'http://localhost:5173');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+  next();
+}, express.static('uploads'));
 
 // MongoDB Connection
 const mongoURI =

@@ -1,0 +1,171 @@
+{
+  "timestamp": "2025-09-24T06:02:41.440Z",
+  "summary": {
+    "totalChecks": 15,
+    "passedChecks": 12,
+    "failedChecks": 3,
+    "passRate": 80
+  },
+  "categories": {
+    "authentication": [
+      {
+        "check": "Password storage uses proper hashing",
+        "passed": true,
+        "details": "bcrypt: true, comparePassword: true, pre-save hook: true"
+      },
+      {
+        "check": "Sensitive operations require authentication",
+        "passed": true,
+        "details": "verifyToken middleware: true, Authorization header: true"
+      },
+      {
+        "check": "Authorization checks are consistent across all routes",
+        "passed": false,
+        "details": "6/67 routes protected (9%)"
+      },
+      {
+        "check": "JWT or session handling follows best practices",
+        "passed": true,
+        "details": "Env secret: true, Expiration: true, No hardcoded: true"
+      }
+    ],
+    "inputValidation": [
+      {
+        "check": "All user inputs are validated",
+        "passed": true,
+        "details": "cartproductRoutes.js: express-validator, productRoutes.js: express-validator"
+      },
+      {
+        "check": "Input validation prevents injection attacks",
+        "passed": true,
+        "details": "No injection vulnerabilities found"
+      },
+      {
+        "check": "File uploads have proper validation and restrictions",
+        "passed": false,
+        "details": "multer: true, fileFilter: false, sizeLimits: false, typeValidation: false"
+      }
+    ],
+    "dataProtection": [
+      {
+        "check": "Sensitive data is properly encrypted",
+        "passed": true,
+        "details": "Password hashing implemented: true"
+      },
+      {
+        "check": "No secrets or credentials in the code",
+        "passed": false,
+        "details": "Found: userRoutes.js: token:\", token.substring(0, 20) + \"..."
+      },
+      {
+        "check": "Proper error handling without information leakage",
+        "passed": true,
+        "details": "No information leakage found"
+      },
+      {
+        "check": "Database queries are parameterized",
+        "passed": true,
+        "details": "Proper parameterized queries found"
+      }
+    ],
+    "securityConfiguration": [
+      {
+        "check": "Security headers are implemented",
+        "passed": true,
+        "details": "helmet: true, helmet.use: true, custom headers: true"
+      },
+      {
+        "check": "CORS is properly configured",
+        "passed": true,
+        "details": "CORS: true, restrictive origin: true, methods defined: true"
+      },
+      {
+        "check": "Content Security Policy is implemented",
+        "passed": true,
+        "details": "CSP headers: true, directives defined: true"
+      },
+      {
+        "check": "No unnecessary information in HTTP responses",
+        "passed": true,
+        "details": "No information leakage found"
+      }
+    ]
+  },
+  "results": [
+    {
+      "check": "Password storage uses proper hashing",
+      "passed": true,
+      "details": "bcrypt: true, comparePassword: true, pre-save hook: true"
+    },
+    {
+      "check": "Sensitive operations require authentication",
+      "passed": true,
+      "details": "verifyToken middleware: true, Authorization header: true"
+    },
+    {
+      "check": "Authorization checks are consistent across all routes",
+      "passed": false,
+      "details": "6/67 routes protected (9%)"
+    },
+    {
+      "check": "JWT or session handling follows best practices",
+      "passed": true,
+      "details": "Env secret: true, Expiration: true, No hardcoded: true"
+    },
+    {
+      "check": "All user inputs are validated",
+      "passed": true,
+      "details": "cartproductRoutes.js: express-validator, productRoutes.js: express-validator"
+    },
+    {
+      "check": "Input validation prevents injection attacks",
+      "passed": true,
+      "details": "No injection vulnerabilities found"
+    },
+    {
+      "check": "File uploads have proper validation and restrictions",
+      "passed": false,
+      "details": "multer: true, fileFilter: false, sizeLimits: false, typeValidation: false"
+    },
+    {
+      "check": "Sensitive data is properly encrypted",
+      "passed": true,
+      "details": "Password hashing implemented: true"
+    },
+    {
+      "check": "No secrets or credentials in the code",
+      "passed": false,
+      "details": "Found: userRoutes.js: token:\", token.substring(0, 20) + \"..."
+    },
+    {
+      "check": "Proper error handling without information leakage",
+      "passed": true,
+      "details": "No information leakage found"
+    },
+    {
+      "check": "Database queries are parameterized",
+      "passed": true,
+      "details": "Proper parameterized queries found"
+    },
+    {
+      "check": "Security headers are implemented",
+      "passed": true,
+      "details": "helmet: true, helmet.use: true, custom headers: true"
+    },
+    {
+      "check": "CORS is properly configured",
+      "passed": true,
+      "details": "CORS: true, restrictive origin: true, methods defined: true"
+    },
+    {
+      "check": "Content Security Policy is implemented",
+      "passed": true,
+      "details": "CSP headers: true, directives defined: true"
+    },
+    {
+      "check": "No unnecessary information in HTTP responses",
+      "passed": true,
+      "details": "No information leakage found"
+    }
+  ]
+}
