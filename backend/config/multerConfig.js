@@ -3,6 +3,15 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 
+/**
+ * Multer Configuration for File Uploads
+ * 
+ * This module configures multer middleware for secure file upload handling.
+ * It includes security measures like file type validation, size limits,
+ * path traversal protection, and secure filename generation.
+ */
+
+
 // Ensure the upload directory exists
 const uploadDir = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadDir)) {
