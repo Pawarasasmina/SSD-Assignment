@@ -5,7 +5,6 @@ const { body, param, validationResult } = require('express-validator');
 
 const cartProduct = require("../models/cartProduct");
 
-
 // Validation middleware
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
@@ -26,8 +25,6 @@ const validateUserId = [
   param('userId').isString().trim().notEmpty().withMessage('User ID is required'),
   validateRequest
 ];
-
-
 
 router.get("/test", (req, res) => res.send("route is working"));
 
