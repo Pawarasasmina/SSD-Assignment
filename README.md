@@ -1,13 +1,12 @@
 # SE4030 – Secure Software Development Assignment
 
-
 ## Project Links
-- **Original Project**: [Link to the original Healthcare Management System]
-- **Modified Project**: [Link to your fixed repository]
-- **Video Presentation**: [YouTube Link - To be added]
+- **Original Project**: https://github.com/Pawarasasmina/Pixel-Plaza---Online-Shopping-Mall
+- **Modified Project**: https://github.com/Pawarasasmina/SSD-Assignment
+- **Video Presentation**: https://youtu.be/6u8BLg63DbI
 
 ## Project Overview
-This repository contains a Healthcare Management System with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
+This repository contains a Pixel Plaza Online Shopping Mall with implemented security fixes. The application includes both frontend (React) and backend (Node.js/Express) components. The original application contained several security vulnerabilities that have been identified and fixed as part of this assignment.
 
 ## Security Vulnerabilities and Fixes
 
@@ -126,7 +125,6 @@ npm run dev
 - File upload security measures
 - MongoDB query injection prevention
 - OAuth 2.0 implementation best practices
-
 
 ## Individual Contributions
 
