@@ -18,6 +18,12 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+/**
+ * Define allowed file types (MIME types)
+ * Only image files are permitted to prevent malicious uploads
+ * This is the first layer of file type validation
+ */
+
 // Define allowed file types
 const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
